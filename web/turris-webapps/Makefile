@@ -44,10 +44,10 @@ define Package/turris-webapps/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/index.html $(1)/www/turris-webapps
 
 	$(INSTALL_DIR) $(1)/www/turris-webapps/css
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/css/styles.css $(1)/www/turris-webapps/css
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/css/*.css $(1)/www/turris-webapps/css
 
 	$(INSTALL_DIR) $(1)/www/turris-webapps/js
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/js/script.js $(1)/www/turris-webapps/js
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/js/*.js $(1)/www/turris-webapps/js
 endef
 
 define Package/turris-webapps/postinst
