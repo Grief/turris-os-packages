@@ -41,6 +41,11 @@ define Package/updater-ng
     +ca-certificates
 endef
 
+define Package/updater-ng/description
+  Turris package manager designed for automatic updates in mind. It is
+  non-interactive in general but highly configurable through Lua scripts.
+endef
+
 CONFIGURE_ARGS += \
 		--disable-tests \
 		--disable-linters \

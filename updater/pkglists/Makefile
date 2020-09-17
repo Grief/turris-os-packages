@@ -22,6 +22,12 @@ define Package/pkglists
   DEPENDS:=+updater-ng +json4lua +libuci-lua
 endef
 
+define Package/pkglists/description
+  Turris OS provides various optional features. Those can be installed either
+  manually as packages or as package list. This provides databasae of all
+  available package lists in Turris OS and updater-ng's config to use it.
+endef
+
 define Package/pkglists/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
