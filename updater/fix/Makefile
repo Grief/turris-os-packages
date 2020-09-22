@@ -132,6 +132,12 @@ define Package/fix-edns-buffer-size/description
   This change is related to DNS Flag Day 2020.
 endef
 
+define Package/fix-pkglists-hardening-options/description
+  Content of package list hardening was moved to conditional options that are not
+  automatically enabled. To keen user's configuration consistent this fix package
+  enables appropriate options for hardening package list if hardening is enabled.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -144,3 +150,4 @@ $(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
 $(eval $(call FIX,corrupted-contract-by-rescue,+uboot-envtools))
 $(eval $(call FIX,cleanup-cert-backup,+cert-backup))
 $(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))
+$(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))
