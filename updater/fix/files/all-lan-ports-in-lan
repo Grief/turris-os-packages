@@ -1,0 +1,5 @@
+#!/bin/sh
+
+uci set network.lan.ifname="$(cd /sys/class/net/; echo lan*)"
+uci commit network.lan.ifname
+/etc/init.d/network restart
