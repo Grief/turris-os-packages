@@ -101,7 +101,7 @@ define Package/fix-config-foris-restore/description
 endef
 
 define Package/fix-all-lan-ports-in-lan/description
-  Ther is a typo in first generation of Turris Shield that renders one LAN
+  There is a typo in first generation of Turris Shield that renders one LAN
   port unusable. We noticed this really late, but as Shield doesn't support
   manual interface assignements, it is safe to assume that all ports on
   switch should be part of LAN network.
