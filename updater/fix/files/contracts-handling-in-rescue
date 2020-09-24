@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/sh
+set -eu
 nor-update
 if fw_printenv -n contract; then
 	local contract="$(fw_printenv -n contract | sed -n 's|.*\(turris_lists=contracts/[^=/]*\)$|\1|p')"
