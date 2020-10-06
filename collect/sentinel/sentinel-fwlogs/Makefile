@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-fwlogs
-PKG_VERSION:=0.0.1
+PKG_VERSION:=0.1.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/fwlogs.git
-#PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_VERSION:=2b4d3924d213696cb93d2e2690a84b947ff187df
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
