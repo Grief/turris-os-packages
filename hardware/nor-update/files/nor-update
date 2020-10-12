@@ -1,17 +1,84 @@
-#!/bin/sh -e
-VERSION=@VERSION@
+#!/bin/sh
+DEVEL=""
+SECURE_FIRMWARE="secure-firmware.bin"
+SECURE_FIRMWARE_PART=""
+UBOOT="uboot"
+UBOOT_PART=""
+RESCUE="rescue"
+RESCUE_PART=""
+DTB="dtb"
+DTB_PART=""
 
-if [ "0$(cat /etc/nor-version 2>/dev/null)" -lt $VERSION ] && [ "$(uname -m)" = ppc ]; then
-	for i in 0 1 2 3; do
-		if [ "$(cat /dev/mtd$i | md5sum -)" \!= "$(cat /usr/share/nor-update/turris/mtd$i | md5sum -)" ]; then
-			echo "Updating mtd$i"
-			mtd erase /dev/mtd$i;
-			mtd write /usr/share/nor-update/turris/mtd$i /dev/mtd$i
-		fi
-	done
-	echo $VERSION > /etc/nor-version
-	echo "NOR is up to date!"
-	sync
+print_help() {
+    echo "Usage:"
+    echo "    nor-update [-d]"
+    echo
+    echo "Options:"
+    echo "    -d   Use devel version - bleeding edge, but might brick your device"
+    echo "    -h   Show help"
+}
+
+while [ -n "$1" ]; do
+    case "$1" in
+        "-d") DEVEL="y";;
+        "-h") print_help;;
+        *) echo "Invlaid usage!!!"
+           print_help
+           ;;;
+    esac
+    shift
+done
+
+flash() {
+    local part="$1"
+    shift
+
+    while [ -n "$1" ] && [ \! -r "$1" ]; do
+        shift
+    done
+
+    if [ -r "$1" ] && [ -c "/dev/$part" ]; then
+        mtd verify "$1" "/dev/$part" || \
+            mtd -e "/dev/$part" write "$1" "/dev/$part"
+    fi
+}
+
+die() {
+    echo "$1" >&2
+    exit 1
+}
+
+fix_boot_scr() {
+    local dev="$(sed -n 's|^\(/dev/[a-z0-9]*\) / btrfs .*|\1|p' /proc/mounts)"
+    # Is root on btrfs?
+    [ -n "$dev" ] || return
+    local tmpdir="$(mktemp -d)"
+    [ -n "$tmpdir" ] || die "Can't create a temp directory!"
+    mount "$dev" "$tmpdir" || die "Can't mount root filesystem"
+    [ -e "$tmpdir"/boot.scr ] || ln -sf @/boot/boot.scr "$tmpdir"/boot.scr || die "Can't create boot.scr symlink"
+    umount "$tmpdir"
+    rmdir "$tmpdir"
+}
+
+. "/usr/share/nor-update/config.sh"
+
+fix_boot_scr
+
+# To make relative paths work
+cd "/usr/share/nor-update/"
+
+if [ -z "$DEVEL" ]; then
+    flash "$SECURE_FIRMWARE_PART" "$SECURE_FIRMWARE"
+    flash "$UBOOT_PART" "$UBOOT"
+    flash "$RESCUE_PART" "$RESCUE"
+    flash "$DTB_PART" "$DTB"
+    # Backward compatibility with Turris 1.X, to be dropped
+    for m in mtd[0-9]; do
+        flash "$m" "$m"
+    done
 else
-	echo "Already up to date"
+    flash "$SECURE_FIRMWARE_PART" "/usr/share/$DEVICE/secure-image-devel"
+    flash "$UBOOT_PART" "/usr/share/$DEVICE/uboot-devel" "$UBOOT"
+    flash "$RESCUE_PART" "/usr/share/rescue-image/image.fit.lzma" "$RESCUE"
+    flash "$DTB_PART" "$(ls -1 /boot | grep '.*turris.*.dtb' | head -n1)" "$DTB"
 fi

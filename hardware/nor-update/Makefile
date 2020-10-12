@@ -8,35 +8,48 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nor-update
-PKG_VERSION:=6
 PKG_RELEASE:=1
+PKG_VERSION:=2.0
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/nor-update
-  TITLE:=NOR update for Turris 1.x
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x +mtd
+define Package/turris-nor-update
+  TITLE:=NOR update for Turris routers
+  DEPENDS:=+mtd
 endef
 
 Build/Compile:=:
 
-define Package/nor-update/install
-	$(INSTALL_DIR) $(1)/usr/share/nor-update/turris
-	$(INSTALL_DATA) ./files/mtd* $(1)/usr/share/nor-update/turris
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/nor-update
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+DEVICE := mox
+DATA_VERSION:=1.0
+else ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
+DEVICE := omnia
+DATA_VERSION:=1.0
+else ifeq ($(CONFIG_TARGET_mpc85xx_p2020_DEVICE_turris1x),y)
+DEVICE := turris1x
+DATA_VERSION:=0.1
+else
+DEVICE := unknown
+endif
+
+define Package/turris-nor-update-data
+  TITLE:=Data files for nor-update
+  DEPENDS:=+turris-nor-update
+  VERSION:=$(DATA_VERSION)
+endef
+
+define Package/turris-nor-update-data/install
+	$(INSTALL_DIR) $(1)/usr/share/nor-update/
+	$(INSTALL_DATA) ./files/$(DEVICE)/* $(1)/usr/share/nor-update/
+endef
+
+define Package/turris-nor-update/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) ./files/nor-update $(1)/usr/sbin/nor-update
-	sed -i "s|@VERSION@|${PKG_VERSION}|" $(1)/usr/sbin/nor-update
 endef
 
-define Package/nor-update/postinst
-#!/bin/sh
-if [ -z "$${IPKG_INSTROOT}" ] ; then
-	/etc/init.d/nor-update enable
-fi
-endef
-
-$(eval $(call BuildPackage,nor-update))
+$(eval $(call BuildPackage,turris-nor-update))
+$(eval $(call BuildPackage,turris-nor-update-data))
