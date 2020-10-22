@@ -27,19 +27,19 @@ PKG_FIXUP:=autoreconf
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/autotools.mk
 
-define Package/Common
+define Package/logc/Default
   SECTION:=libs
   CATEGORY:=Libraries
   URL:=https://gitlab.nic.cz/turris/logc.git
 endef
 
 define Package/logc
-  $(call Package/Common)
+  $(call Package/logc/Default)
   TITLE:=logc
 endef
 
 define Package/logc-argp
-  $(call Package/Common)
+  $(call Package/logc/Default)
   TITLE:=logc-argp
 endef
 
