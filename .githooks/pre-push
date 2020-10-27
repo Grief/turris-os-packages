@@ -43,7 +43,7 @@ while read -r local_ref local_sha1 remote_ref remote_sha1; do
 				exit 1
 			fi
 			;;
-		feature/*|bugfix/*|refacotr/*|hack/*)
+		feature/*|bugfix/*|refactor/*|hack/*)
 			if compare_ancestors "$local_sha1" develop master; then
 				echo "Reference has invalid ancestor, please base it on top of develop: $local_ref" >&2
 				exit 1
