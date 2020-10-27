@@ -5,7 +5,7 @@ branch_base="$2"
 branch_desig="$3"
 
 valid_base() {
-	[ "$1" = "master" ] || [ "$1" = "develop" ]
+	[[ "$1" == "master" || "$1" == "develop" ]]
 }
 
 valid_desig() {
@@ -31,7 +31,7 @@ while [ -z "$branch_name" ]; do
 done
 
 while ! valid_base "$branch_base"; do
-	read -r -p "Branch base (develop/master): " branch_base
+	read -r -p "Branch base ([d]evelop/[m]aster): " branch_base
 	case "$branch_base" in
 		d|dev)
 			branch_base="develop"
