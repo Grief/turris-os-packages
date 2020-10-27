@@ -20,7 +20,7 @@ compare_ancestors() {
 
 
 
-if [[ "$2" != *$server* ]] && [[ "$2" != *$server_old* ]]; then
+if [[ "$2" != *$server* && "$2" != *$server_old* ]]; then
 	# We are interested only in pushes to our server
 	exit 0
 fi
