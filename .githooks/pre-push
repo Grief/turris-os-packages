@@ -19,8 +19,11 @@ compare_ancestors() {
 }
 
 
+remote_name="$1"
+remote_url="$2"
 
-if [[ "$2" != *$server* && "$2" != *$server_old* ]]; then
+
+if [[ "$remote_url" != *$server* && "$remote_url" != *$server_old* ]]; then
 	# We are interested only in pushes to our server
 	exit 0
 fi
