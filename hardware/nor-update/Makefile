@@ -17,34 +17,10 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-nor-update
   TITLE:=NOR update for Turris routers
-  DEPENDS:=+mtd
+  DEPENDS:=+mtd +turris-nor-firmware
 endef
 
 Build/Compile:=:
-
-ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
-DEVICE := mox
-DATA_VERSION:=1.0
-else ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
-DEVICE := omnia
-DATA_VERSION:=1.0
-else ifeq ($(CONFIG_TARGET_mpc85xx_p2020_DEVICE_turris1x),y)
-DEVICE := turris1x
-DATA_VERSION:=0.1
-else
-DEVICE := unknown
-endif
-
-define Package/turris-nor-update-data
-  TITLE:=Data files for nor-update
-  DEPENDS:=+turris-nor-update
-  VERSION:=$(DATA_VERSION)
-endef
-
-define Package/turris-nor-update-data/install
-	$(INSTALL_DIR) $(1)/usr/share/nor-update/
-	$(INSTALL_DATA) ./files/$(DEVICE)/* $(1)/usr/share/nor-update/
-endef
 
 define Package/turris-nor-update/install
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -52,4 +28,3 @@ define Package/turris-nor-update/install
 endef
 
 $(eval $(call BuildPackage,turris-nor-update))
-$(eval $(call BuildPackage,turris-nor-update-data))

@@ -1,2 +1,0 @@
-UBOOT_PART="mtd0"
-RESCUE_PART="mtd1"
