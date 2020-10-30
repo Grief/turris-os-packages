@@ -28,7 +28,7 @@ define Package/updater-opkg-wrapper
 endef
 
 define Package/updater-opkg-wrapper/description
-  Minimal script tracking opkg commands and recoding changes to system to
+  Minimal script tracking opkg commands and changing into
   updater-ng's configuration. This is needed so changes done by opkg are not
   reverted by updater. In general this covers only installation and removal of
   packages and that is with exceptions too.

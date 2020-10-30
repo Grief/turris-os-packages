@@ -35,7 +35,7 @@ endef
 define Package/updater-supervisor/description
   Python library and program wrapping execution of updater-ng's pkgupdate tool. It
   integrates is to frontend and provides additional reporting mechanisms.
-  Secondary this also serves as univeral configuration API for updater-ng.
+  Secondary this also serves as universal configuration API for updater-ng.
 endef
 
 define Py3Package/updater-supervisor/install

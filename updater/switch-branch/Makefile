@@ -23,10 +23,10 @@ define Package/switch-branch
 endef
 
 define Package/switch-branch/description
-  Turris OS is released in various branches (with different guaranties and levels
+  Turris OS is released in various branches (with different guarantees and levels
   of stability). This script allows simple switch between them and also between
   archived versions. You should know that while move to more unstable branches is
-  commonly supported the opossite (while allowed by script) might be problematic.
+  commonly supported the opposite (while allowed by script) might be problematic.
   The same applies on version downgrades.
 endef
 

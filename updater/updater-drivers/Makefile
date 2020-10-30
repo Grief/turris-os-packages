@@ -18,7 +18,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/updater-drivers
   SECTION:=updater
   CATEGORY:=Turris Updater
-  TITLE:=Drivers automatic installation for updater
+  TITLE:=Automatic drivers installation
   DEPENDS:=+updater-ng
 endef
 

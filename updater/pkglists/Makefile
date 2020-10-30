@@ -24,7 +24,7 @@ endef
 
 define Package/pkglists/description
   Turris OS provides various optional features. Those can be installed either
-  manually as packages or as package list. This provides databasae of all
+  manually as packages or as package list. This provides database of all
   available package lists in Turris OS and updater-ng's config to use it.
 endef
 
