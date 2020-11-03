@@ -1,0 +1,105 @@
+From df93939388ae1f95587fb0dd4556b3a57fc8a915 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal@hrusecky.net>
+Date: Mon, 3 Aug 2020 12:59:25 +0200
+Subject: [PATCH] Shield customization
+
+Remove few bits and pieces that shouldn't be there for Shield.
+---
+ js/src/main/pages.js         | 49 +++---------------------------------
+ reforis/templates/login.html |  4 +--
+ 2 files changed, 4 insertions(+), 49 deletions(-)
+
+diff --git a/js/src/main/pages.js b/js/src/main/pages.js
+index d732975d..86ea05c5 100644
+--- a/js/src/main/pages.js
++++ b/js/src/main/pages.js
+@@ -42,11 +42,6 @@ const PAGES = [
+         path: "/network-settings",
+         icon: "network-wired",
+         pages: [
+-            {
+-                name: _("Wi-Fi"),
+-                path: "/wifi",
+-                component: WiFi,
+-            },
+             {
+                 name: _("WAN"),
+                 path: "/wan",
+@@ -62,16 +57,6 @@ const PAGES = [
+                 path: "/dns",
+                 component: DNS,
+             },
+-            {
+-                name: _("Interfaces"),
+-                path: "/interfaces",
+-                component: Interfaces,
+-            },
+-            {
+-                name: _("Guest Network"),
+-                path: "/guest-network",
+-                component: GuestNetwork,
+-            },
+         ],
+     },
+     {
+@@ -103,37 +88,9 @@ const PAGES = [
+         ],
+     },
+     {
+-        name: _("Package Management"),
+-        submenuId: "package-management",
+-        path: "/package-management",
+-        icon: "box",
+-        pages: [
+-            {
+-                name: _("Update Settings"),
+-                path: "/update-settings",
+-                component: UpdateSettings,
+-            },
+-            {
+-                name: _("Updates"),
+-                path: "/updates",
+-                component: Updates,
+-            },
+-            {
+-                name: _("Packages"),
+-                path: "/packages",
+-                component: Packages,
+-            },
+-            {
+-                name: _("Languages"),
+-                path: "/languages",
+-                component: Languages,
+-            },
+-        ],
+-    },
+-    {
+-        name: _("Advanced Administration"),
+-        path: ForisURLs.luci,
+-        icon: "cog",
++        name: _("Global Threat Statistics"),
++        path: "https://view.sentinel.turris.cz",
++        icon: "chart-line",
+         isLinkOutside: true,
+     },
+     {
+diff --git a/reforis/templates/login.html b/reforis/templates/login.html
+index 9260f860..b7cb65e9 100644
+--- a/reforis/templates/login.html
++++ b/reforis/templates/login.html
+@@ -30,10 +30,8 @@
+         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" autofocus
+             required>
+         <button class="btn btn-primary btn-block mb-3" type="submit">{% trans %}Log in{% endtrans %}</button>
+-        <a href="/cgi-bin/luci">{% trans %}Go to LuCI{% endtrans %}</a> {% trans %}or{% endtrans %}
+-        <a href="/">{% trans %}back to select{% endtrans %}</a>
+     </form>
+ </body>
+ </body>
+ 
+-</html>
+\ No newline at end of file
++</html>
+-- 
+GitLab
+
