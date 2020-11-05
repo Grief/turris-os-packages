@@ -27,7 +27,7 @@ define Package/turris-webapps-luci
 endef
 
 define Package/turris-webapps-luci/description
-  Webapps integration package for LuCI
+  Webapps integration package for LuCI.
 endef
 
 define Build/Compile
