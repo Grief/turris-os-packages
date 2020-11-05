@@ -19,7 +19,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_DEPENDS:=argp-standalone
+PKG_BUILD_DEPENDS:=argp-standalone gperf/host
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
