@@ -1,0 +1,2 @@
+DTB_PART="mtd6"
+UBOOT_PART="mtd5"

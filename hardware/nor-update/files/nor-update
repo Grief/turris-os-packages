@@ -1,74 +1,84 @@
 #!/bin/sh
-devel=""
-
-print_usage() {
-	echo "Usage: nor-update [-d]"
-}
+DEVEL=""
+SECURE_FIRMWARE="secure-firmware.bin"
+SECURE_FIRMWARE_PART=""
+UBOOT="uboot"
+UBOOT_PART=""
+RESCUE="rescue"
+RESCUE_PART=""
+DTB="dtb"
+DTB_PART=""
 
 print_help() {
-	print_usage
-	cat <<EOF
-Tool to update firmware in NOR memory. Be carefull with this!
-
-Options:
-  -d   Use devel version - bleeding edge, but might brick your device
-  -h   Show help
-EOF
+    echo "Usage:"
+    echo "    nor-update [-d]"
+    echo
+    echo "Options:"
+    echo "    -d   Use devel version - bleeding edge, but might brick your device"
+    echo "    -h   Show help"
 }
 
+while [ -n "$1" ]; do
+    case "$1" in
+        "-d") DEVEL="y";;
+        "-h") print_help;;
+        *) echo "Invlaid usage!!!"
+           print_help
+           ;;;
+    esac
+    shift
+done
+
+flash() {
+    local part="$1"
+    shift
+
+    while [ -n "$1" ] && [ \! -r "$1" ]; do
+        shift
+    done
+
+    if [ -r "$1" ] && [ -c "/dev/$part" ]; then
+        mtd verify "$1" "/dev/$part" || \
+            mtd -e "/dev/$part" write "$1" "/dev/$part"
+    fi
+}
 
 die() {
-	echo "$1" >&2
-	exit 1
+    echo "$1" >&2
+    exit 1
 }
 
 fix_boot_scr() {
-	local dev="$(sed -n 's|^\(/dev/[a-z0-9]*\) / btrfs .*|\1|p' /proc/mounts)"
-	# Is root on btrfs?
-	[ -n "$dev" ] || return
-	local tmpdir="$(mktemp -d)"
-	[ -n "$tmpdir" ] || die "Can't create a temp directory!"
-	mount "$dev" "$tmpdir" || die "Can't mount root filesystem"
-	[ -e "$tmpdir"/boot.scr ] || ln -sf @/boot/boot.scr "$tmpdir"/boot.scr || die "Can't create boot.scr symlink"
-	umount "$tmpdir"
-	rmdir "$tmpdir"
+    local dev="$(sed -n 's|^\(/dev/[a-z0-9]*\) / btrfs .*|\1|p' /proc/mounts)"
+    # Is root on btrfs?
+    [ -n "$dev" ] || return
+    local tmpdir="$(mktemp -d)"
+    [ -n "$tmpdir" ] || die "Can't create a temp directory!"
+    mount "$dev" "$tmpdir" || die "Can't mount root filesystem"
+    [ -e "$tmpdir"/boot.scr ] || ln -sf @/boot/boot.scr "$tmpdir"/boot.scr || die "Can't create boot.scr symlink"
+    umount "$tmpdir"
+    rmdir "$tmpdir"
 }
 
-flash() {
-	local part="$1"
-	[ -r "$part" ] || return
-
-	mtd verify "$1" "/dev/$part" || \
-		mtd -e "/dev/$part" write "$1" "/dev/$part"
-}
-
-
-while [ -n "$1" ]; do
-	case "$1" in
-		"-d")
-			devel="y"
-			;;
-		"-h")
-			print_help
-			exit 0
-			;;
-		*)
-			echo "Unknown argument: $1"
-			print_usage
-			exit 1
-			;;
-	esac
-	shift
-done
+. "/usr/share/nor-update/config.sh"
 
 fix_boot_scr
 
-if [ -z "$devel" ]; then
-	cd "/usr/share/nor-firmware/"
-else
-	cd "/usr/share/nor-firmware-unstable/"
-fi
+# To make relative paths work
+cd "/usr/share/nor-update/"
 
-for m in mtd[0-9]; do
-	flash "$m"
-done
+if [ -z "$DEVEL" ]; then
+    flash "$SECURE_FIRMWARE_PART" "$SECURE_FIRMWARE"
+    flash "$UBOOT_PART" "$UBOOT"
+    flash "$RESCUE_PART" "$RESCUE"
+    flash "$DTB_PART" "$DTB"
+    # Backward compatibility with Turris 1.X, to be dropped
+    for m in mtd[0-9]; do
+        flash "$m" "$m"
+    done
+else
+    flash "$SECURE_FIRMWARE_PART" "/usr/share/$DEVICE/secure-image-devel"
+    flash "$UBOOT_PART" "/usr/share/$DEVICE/uboot-devel" "$UBOOT"
+    flash "$RESCUE_PART" "/usr/share/rescue-image/image.fit.lzma" "$RESCUE"
+    flash "$DTB_PART" "$(ls -1 /boot | grep '.*turris.*.dtb' | head -n1)" "$DTB"
+fi
