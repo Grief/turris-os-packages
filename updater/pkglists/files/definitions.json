@@ -19,7 +19,7 @@
 				"description": "Add firewall rules to block attackers detected by Turris collection network.",
 				"default": true
 			},
-			"nikola": {
+			"fwlogs": {
 				"title": "Firewall Logs",
 				"description": "Collect logs from firewall for attempted connections.",
 				"default": true
