@@ -22,17 +22,26 @@ endef
 
 Build/Compile:=:
 
+define Package/turris-nor-update-devel-data
+  TITLE:=Data files for nor-update (development version)
+  DEPENDS:=+turris-nor-update +rescue-image \
+		  +@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia:u-boot-omnia \
+		  +@TARGET_mvebu_cortexa53_DEVICE_cznic-mox:u-boot-mox
+  VERSION:=0.9
+endef
+
 ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
-DEVICE := mox
+DEVICE:=mox
 DATA_VERSION:=1.0
 else ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
-DEVICE := omnia
+DEVICE:=omnia
 DATA_VERSION:=1.0
 else ifeq ($(CONFIG_TARGET_mpc85xx_p2020_DEVICE_turris1x),y)
-DEVICE := turris1x
+DEVICE:=turris1x
 DATA_VERSION:=0.1
 else
-DEVICE := unknown
+DEVICE:=unknown
+DATA_VERSION:=0.0
 endif
 
 define Package/turris-nor-update-data
@@ -40,6 +49,8 @@ define Package/turris-nor-update-data
   DEPENDS:=+turris-nor-update
   VERSION:=$(DATA_VERSION)
 endef
+
+Package/turris-nor-update-devel-data/install:=:
 
 define Package/turris-nor-update-data/install
 	$(INSTALL_DIR) $(1)/usr/share/nor-update/
@@ -52,4 +63,5 @@ define Package/turris-nor-update/install
 endef
 
 $(eval $(call BuildPackage,turris-nor-update))
+$(eval $(call BuildPackage,turris-nor-update-devel-data))
 $(eval $(call BuildPackage,turris-nor-update-data))
